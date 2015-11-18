@@ -3,6 +3,10 @@ import csv, json
 import settings
 import tools
 
+generic_matcher_1 = {
+    "a highly": 3, "a notably": 2, "a minorly": 1, "not at all a": 0
+}
+
 def main():
     print("Loading student raw csv.")
 
@@ -77,8 +81,96 @@ def main():
             living_location = living_location_matcher[raw_entry[9]]
             clean_entry.append(("living_location", raw_entry[9], living_location))
 
+            # social media effectiveness
+            social_media_effectiveness_matcher = {
+                "always effective": 2, "usually effective": 1,
+                "usually ineffective": -1, "always ineffective": -2
+            }
+            social_media_effectiveness = social_media_effectiveness_matcher[raw_entry[10]]
+            clean_entry.append(("social_media_effectiveness", raw_entry[10],
+                                social_media_effectiveness))
+
+            # skipping honors specific question because it was covered in
+            # communities question
+
+            # honors color environment
+            honors_color_comfort_matcher = {
+                "very comfortable": 2, "somewhat comfortable": 1,
+                "somewhat uncomfortable": -1, "very uncomfortable": -2,
+                "": None
+            }
+            honors_color_comfort = honors_color_comfort_matcher[raw_entry[12]]
+            clean_entry.append(("honors_color_comfort", raw_entry[12], honors_color_comfort))
+
+            # honors diversity
+            honors_diversity_matcher = {
+                "actively promotes": 2,
+                "somewhat promotes": 1,
+                "fails to promote": 0,
+                "": None
+            }
+            honors_diversity = honors_diversity_matcher[raw_entry[13]]
+            clean_entry.append(("honors_diversity", raw_entry[13], honors_diversity))
+
+            # discrimination
+            experienced_discrim_matcher = {"have": True, "have not": False}
+            experienced_discrim = experienced_discrim_matcher[raw_entry[14]]
+            clean_entry.append(("experienced_discrim", raw_entry[14], experienced_discrim))
+
+            # discrimination demographic reasons
+            discrim_demographic = tools.parse_discrim_demographic(raw_entry[15])
+            clean_entry.append(("discrim_demographic", raw_entry[15], discrim_demographic))
+
+            # discrimination due to involvement with selected groups
+            discrim_involvement = tools.parse_discrim_involvement(raw_entry[16])
+            clean_entry.append(("discrim_involvement", raw_entry[16], discrim_involvement))
+
+            # discrimination due to LACK of involvement with selected groups
+            discrim_lack_involvement = tools.parse_discrim_involvement(raw_entry[17])
+            clean_entry.append(("discrim_lack_involvement", raw_entry[17], discrim_lack_involvement))
+
+            # how diverse campus is
+            campus_diversity = generic_matcher_1[raw_entry[18]]
+            clean_entry.append(('campus_diversity', raw_entry[18], campus_diversity))
+
+            # campus diveristy needs
+            campus_diversity_needs_matcher = {
+                "needs a lot more": 2, "needs some more": 1,
+                "has just the right amount of": 0, "needs some less": -1,
+                "needs a lot less": -2
+            }
+            campus_diversity_needs = campus_diversity_needs_matcher[raw_entry[19]]
+            clean_entry.append(('campus_diversity_needs', raw_entry[19], campus_diversity_needs))
+
+            # groups discriminated against on campus
+            groups_discrim_against = tools.parse_groups(raw_entry[20])
+            clean_entry.append(('groups_discrim_against', raw_entry[20], groups_discrim_against))
+
+            # groups favored on campus
+            groups_favored = tools.parse_groups(raw_entry[21])
+            clean_entry.append(('groups_favored', raw_entry[21], groups_favored))
+
+            # college favortism
+            college_favortism_matcher = {"does": True, "does not": False}
+            college_favortism = college_favortism_matcher[raw_entry[22]]
+            clean_entry.append(('college_favortism', raw_entry[22], college_favortism))
+
+            # satisfied with living conditions
+            living_satisfied_matcher = {
+                "very satisfied": 2, "decently satisfied": 1,
+                "minorly unsatisfied": -1, "not at all satisfied": -2
+            }
+            living_satisfied = living_satisfied_matcher[raw_entry[23]]
+            clean_entry.append(('living_satisfied', raw_entry[23], living_satisfied))
+
+            # living diversity
+            living_diversity = generic_matcher_1[raw_entry[24]]
+            clean_entry.append(('living_diversity', raw_entry[24], living_diversity))
 
             student_clean_data.append(clean_entry)
+
+
+
         except Exception as e:
             print("\nProcessing failed for entry {}".format(i))
             raise(e)
@@ -86,9 +178,7 @@ def main():
 
     print('\nFinsihed processing {} students'.format(len(student_clean_data)))
 
-    tools.print_first(5, student_clean_data)
-
-
+    tools.print_first(3, student_clean_data)
 
 
 
