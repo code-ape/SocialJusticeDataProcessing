@@ -24,6 +24,14 @@ student_clean_dir = os.path.join(data_dir, student_clean_folder_name)
 fac_staff_clean_dir = os.path.join(data_dir, fac_staff_clean_folder_name)
 
 
+# stats folders
+student_stats_folder_name = "stats/student"
+fac_staff_stats_folder_name = "stats/fac_staff"
+# combine paths
+student_stats_dir = os.path.join(data_dir, student_stats_folder_name)
+fac_staff_stats_dir = os.path.join(data_dir, fac_staff_stats_folder_name)
+
+
 # raw files
 student_raw_file_name = "E&H Student Climate Survey Early Fall 2015 (Responses) - Form Responses 1.csv"
 fac_staff_raw_file_name = "E&H Faculty - Staff Climate Survey Early Fall 2015 (Responses) - Form Responses 1.csv"
@@ -42,8 +50,11 @@ fac_staff_clean_path = os.path.join(fac_staff_clean_dir, fac_staff_clean_file_na
 
 # verify everything exists
 files_to_verify = [student_raw_path, fac_staff_raw_path]
-dirs_to_verify = [student_raw_dir, fac_staff_raw_dir,
-                     student_clean_dir, fac_staff_clean_dir]
+dirs_to_verify = [
+    student_raw_dir, fac_staff_raw_dir,
+    student_clean_dir, fac_staff_clean_dir,
+    student_stats_dir, fac_staff_stats_dir
+]
 
 failed = False
 for f in files_to_verify:

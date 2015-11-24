@@ -3,7 +3,7 @@ def print_first(number,thing):
     if not hasattr(thing, '__iter__'):
         msg = "print_first_10: can't iterate over given thing..."
         print(msg)
-        raise(msg)
+        raise(Exception(msg))
         return
 
     thing_len = len(thing)
