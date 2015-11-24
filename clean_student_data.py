@@ -1,4 +1,6 @@
 import csv, json
+import os
+import traceback
 
 import settings
 import tools
@@ -7,16 +9,16 @@ generic_matcher_1 = {
     "a highly": 3, "a notably": 2, "a minorly": 1, "not at all a": 0
 }
 
-def main():
-    print("Loading student raw csv.")
+generic_matcher_2 = {
+    "always fair and equal": 3,
+    "usually fair and equal": 2,
+    "more often than not fair and equal": 1,
+    "more often than not unfair and discriminatory": -1,
+    "usually unfair and discriminatory": -2,
+    "always unfair and discriminatory": -3
+}
 
-    student_raw_data = []
-
-    with open(settings.student_raw_path, 'r') as csvfile:
-        reader = csv.reader(csvfile)
-        for row in reader:
-            student_raw_data.append(row)
-
+def clean_student_data(student_raw_data):
     student_clean_key = []
     student_clean_data = []
 
@@ -103,14 +105,15 @@ def main():
             clean_entry.append(("honors_color_comfort", raw_entry[12], honors_color_comfort))
 
             # honors diversity
-            honors_diversity_matcher = {
+            honors_diversity_internal_matcher = {
                 "actively promotes": 2,
                 "somewhat promotes": 1,
                 "fails to promote": 0,
                 "": None
             }
-            honors_diversity = honors_diversity_matcher[raw_entry[13]]
-            clean_entry.append(("honors_diversity", raw_entry[13], honors_diversity))
+            honors_diversity_internal = honors_diversity_internal_matcher[raw_entry[13]]
+            clean_entry.append(("honors_diversity_internal", raw_entry[13],
+                                honors_diversity_internal))
 
             # discrimination
             experienced_discrim_matcher = {"have": True, "have not": False}
@@ -167,20 +170,100 @@ def main():
             living_diversity = generic_matcher_1[raw_entry[24]]
             clean_entry.append(('living_diversity', raw_entry[24], living_diversity))
 
+            # racial attitude
+            racial_attitude_matcher = {
+                "very friendly": 2, "decently friendly": 1,
+                "minorly unfriendly": -1, "not at all friendly": -2
+            }
+            racial_attitude = racial_attitude_matcher[raw_entry[25]]
+            clean_entry.append(('racial_attitude', raw_entry[25], racial_attitude))
+
+            # sexual assault
+            sexual_assalt = tools.parse_sexual_assault(raw_entry[26])
+            clean_entry.append(('sexual_assalt', raw_entry[26], sexual_assalt))
+
+            # sexual assault concern
+            sexual_assalt_concern_matcher = {"not at all": 0, "a small": 1,
+                "a notable": 2, "a large": 3, "a massive": 4}
+            sexual_assalt_concern = sexual_assalt_concern_matcher[raw_entry[27]]
+            clean_entry.append(('sexual_assalt_concern', raw_entry[27], sexual_assalt_concern))
+
+            # fac_staff_racism
+            fac_staff_racism = generic_matcher_2[raw_entry[28]]
+            clean_entry.append(('fac_staff_racism', raw_entry[28], fac_staff_racism))
+
+            # student body racism
+            student_body_racism = generic_matcher_2[raw_entry[29]]
+            clean_entry.append(('student_body_racism', raw_entry[29], student_body_racism))
+
+            # student body awareness of actions toward racial minorities
+            student_body_racism_awareness_matcher = {"aware": True, "not aware": False}
+            student_body_racism_awareness = student_body_racism_awareness_matcher[raw_entry[30]]
+            clean_entry.append(('student_body_racism_awareness', raw_entry[30],
+                                student_body_racism_awareness))
+
+            # discrimination discouraging involvment on campus
+            discrim_disc_involvement_matcher = {"has": True, "has not": False}
+            discrim_disc_involvement = discrim_disc_involvement_matcher[raw_entry[31]]
+            clean_entry.append(('discrim_disc_involvement', raw_entry[31], discrim_disc_involvement))
+
+            # discrimination compared to other colleges
+            discrim_compared_other_colleges_matcher = {
+                "much more": 2, "notably more": 1, "a similar amount of": 0,
+                "notably less": -1, "much less": -2, "*I have no idea": None
+            }
+            discrim_compared_other_colleges = discrim_compared_other_colleges_matcher[raw_entry[32]]
+            clean_entry.append(('discrim_compared_other_colleges', raw_entry[32],
+                                discrim_compared_other_colleges))
+
+            # honors diversity
+            honors_diversity_global_matcher = {
+                "a highly": 3, "a notably": 2, "a minorly": 1, "not at all a": 0,
+                "*I don't know enough to say": None
+            }
+            honors_diversity_global = honors_diversity_global_matcher[raw_entry[33]]
+            clean_entry.append(('honors_diversity_global', raw_entry[33], honors_diversity_global))
+
             student_clean_data.append(clean_entry)
-
-
 
         except Exception as e:
             print("\nProcessing failed for entry {}".format(i))
+            traceback.print_exc()
             raise(e)
 
+    return student_clean_data
 
-    print('\nFinsihed processing {} students'.format(len(student_clean_data)))
+def main():
+    print("Loading student raw csv.")
 
-    tools.print_first(3, student_clean_data)
+    student_raw_data = []
 
+    with open(settings.student_raw_path, 'r') as csvfile:
+        reader = csv.reader(csvfile)
+        for row in reader:
+            student_raw_data.append(row)
 
+    student_clean_data = clean_student_data(student_raw_data)
+
+    print('\nFinsihed processing {} student responses.'.format(len(student_clean_data)))
+
+    # tools.print_first(3, student_clean_data)
+
+    # deleting old clean data
+    if os.path.exists(settings.student_clean_path):
+        print("Deleting old clean data.")
+        os.remove(settings.student_clean_path)
+    else:
+        print("No old clean data to delete.")
+
+    print("Writing data to: {}".format(settings.student_clean_path))
+
+    try:
+        with open(settings.student_clean_path, "w") as f:
+            f.write(json.dumps(student_clean_data))
+    except Exception as e:
+        print("Failed to write clean student data!")
+        raise e
 
 
 if __name__ == "__main__":

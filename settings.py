@@ -32,6 +32,13 @@ student_raw_path = os.path.join(student_raw_dir, student_raw_file_name)
 fac_staff_raw_path = os.path.join(fac_staff_raw_dir, fac_staff_raw_file_name)
 
 
+# clean files
+student_clean_file_name = "student_clean_data.json"
+fac_staff_clean_file_name = "fac_staff_clean_data.json"
+# combine paths
+student_clean_path = os.path.join(student_clean_dir, student_clean_file_name)
+fac_staff_clean_path = os.path.join(fac_staff_clean_dir, fac_staff_clean_file_name)
+
 
 # verify everything exists
 files_to_verify = [student_raw_path, fac_staff_raw_path]

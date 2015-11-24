@@ -50,6 +50,11 @@ groups_matcher = (
     ("Not listed", "not_listed")
 )
 
+sexual_assalt_matcher = (
+    ("am someone who has", "experienced"),
+    ("know someone who has", "know_someone")
+)
+
 def parse_communities(community_string):
     return parse_list_agruments(community_string, community_matcher)
 
@@ -71,7 +76,8 @@ def parse_discrim_involvement(string):
 def parse_groups(string):
     return parse_list_agruments(string, groups_matcher)
 
-
+def parse_sexual_assault(string):
+    return parse_list_agruments(string, sexual_assalt_matcher)
 
 def parse_list_agruments(string, matcher_dict):
     list = []
