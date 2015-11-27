@@ -40,7 +40,7 @@ def clean_student_data(student_raw_data):
             clean_entry.append(('age', raw_entry[1], age_number))
 
             # gender
-            clean_entry.append(('gender', raw_entry[2], None))
+            clean_entry.append(('gender', raw_entry[2], raw_entry[2]))
 
             # grad vs undergrad student
             student_level_matcher = {"an undergrad": "undergrad", "a grad": "grad"}
@@ -61,7 +61,13 @@ def clean_student_data(student_raw_data):
             clean_entry.append(('years_at_college', raw_entry[5], year_number))
 
             # race
-            clean_entry.append(('race', raw_entry[6], None))
+            race_matcher = {
+                "Asian": "asian", "Black or African American": "black",
+                "Caucasian or White": "white",
+                "Hispanic or Latino/Latina": "hispanic", "not listed": "not listed"
+            }
+            race = race_matcher[raw_entry[6]]
+            clean_entry.append(('race', raw_entry[6], race))
 
             # LGBT
             lgbt_matcher = {"do": True, "do not": False}

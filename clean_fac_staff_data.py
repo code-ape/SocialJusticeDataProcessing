@@ -109,10 +109,6 @@ def clean_fac_staff_data(fac_staff_data):
             diversity_importance = importance_matcher[raw_entry[10]]
             clean_entry.append(('diversity_importance', raw_entry[10], diversity_importance))
 
-            # diversity emphesis
-            diversity_emphesis = agreement_matcher[raw_entry[11]]
-            clean_entry.append(('', raw_entry[11], diversity_emphesis))
-
             # experience loop
             categories = (
                 'diversity_emphesis', 'race_experience', 'financial_experience',
@@ -140,6 +136,7 @@ def clean_fac_staff_data(fac_staff_data):
             raise(e)
 
     return fac_staff_clean_data
+
 
 def main():
     print("Loading fac_staff raw csv.")

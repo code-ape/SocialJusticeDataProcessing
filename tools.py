@@ -1,3 +1,4 @@
+import itertools
 
 def print_first(number,thing):
     if not hasattr(thing, '__iter__'):
@@ -25,6 +26,84 @@ def print_first(number,thing):
             for t in thing[0:iter_length]:
                 print(t)
 
+
+
+def get_student_question_types():
+    cat = "catagory"
+    num = "numerical"
+    multi = "multiple"
+
+    question_types = [
+        [num],      # 1
+        [cat]*3,    # 2-4
+        [num],      # 5
+        [cat]*2,    # 6-7
+        [multi],    # 8
+        [cat],      # 9
+        [num]*3,    # 10-12
+        [cat],      # 13
+        [multi]*3,  # 14-16
+        [num]*2,    # 17-18
+        [multi]*2,  # 19-20
+        [cat],      # 21
+        [num]*3,    # 22-24
+        [multi],    # 25
+        [num]*3,    # 26-28
+        [cat]*2,    # 29-30
+        [num]*2     # 31-32
+    ]
+    return list(itertools.chain(*question_types))
+
+def get_fac_staff_question_types():
+    cat = "catagory"
+    num = "numerical"
+
+    question_types = [
+        [cat]*5,
+        [num],
+        [cat],
+        [num]*19
+    ]
+    return list(itertools.chain(*question_types))
+
+def get_num_questions(question_types):
+    count = 0
+    numerical_questions = []
+    for question_type in question_types:
+        if question_type == "numerical":
+            numerical_questions.append(count)
+        count+=1
+    return numerical_questions
+
+def get_question_title(number, data):
+    first_response = data[0]
+    question = first_response[number]
+    title = question[0]
+    return title
+
+def get_responses_to_numbers(question_nums, data):
+    responses = []
+    for n in question_nums:
+        responses.append(get_responses_to_number(n, data))
+    return responses
+
+
+def turn_responses_into_values(*args):
+    assert(len(args) > 0)
+    return_val = []
+    for response_list in args:
+        clean_response_list = []
+        for response in response_list:
+            clean_response_list.append(response[2])
+        return_val.append(clean_response_list)
+    return return_val
+
+
+def get_responses_to_number(question_num, data):
+    responses = []
+    for entry in data:
+        responses.append(entry[question_num])
+    return responses
 
 community_matcher = (
     ("Athletics", "athletics"), ("Greek Life", "greek life"),
