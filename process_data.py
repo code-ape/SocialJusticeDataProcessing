@@ -9,16 +9,17 @@ def main():
     parser = argparse.ArgumentParser(description="Takes clean data and creates PDF results")
     parser.add_argument('data', metavar='D', type=str, nargs=1,
                         choices=["student", "fac_staff", "both"],
-                        help='use data from fac / staff, student, or both')
+                        help='fac_staff, student, both')
     parser.add_argument('action', metavar='A', type=str, nargs=1,
                         choices=["clean", "stats", "full_process"],
-                        help='what to do with specified ')
+                        help='clean, stats, full_process')
     parser.add_argument('--stats', metavar='S', type=str, nargs=1,
-                        choices=['complete', 'highlights', 'both'],
+                        choices=['correlation', 'category', 'all'],
                         required=False,
                         default="both",
-                        help="whether to do complete testing, highlights, or both")
-    parser.add_argument('--test', help='if choosen will run minimal number', action='store_true')
+                        help="correlation, category, all")
+    parser.add_argument('--highlights', help='if choosen will save only significant results',
+                            action='store_true')
 
     args = parser.parse_args()
 
@@ -29,8 +30,8 @@ def main():
     action_clean = args.action[0] in ["clean", "full_process"]
     action_stats = args.action[0] in ["stats", "full_process"]
 
-    test = args.test
-    stats_arg = args.stats
+    highlights = args.highlights
+    stats_arg = args.stats[0]
 
     if action_clean:
         if process_student:
@@ -40,9 +41,9 @@ def main():
 
     if action_stats:
         if process_student:
-            stats.process_data("student", stats_arg, test)
+            stats.process_data("student", stats_arg, highlights)
         if process_fac_staff:
-            stats.process_data("fac_staff", stats_arg, test)
+            stats.process_data("fac_staff", stats_arg, highlights)
 
 if __name__ == "__main__":
     print("Starting run_stats.py\n")
