@@ -3,8 +3,7 @@ import argparse
 import settings
 import clean_fac_staff_data
 import clean_student_data
-import run_stats
-
+import stats
 
 def main():
     parser = argparse.ArgumentParser(description="Takes clean data and creates PDF results")
@@ -31,7 +30,7 @@ def main():
     action_stats = args.action[0] in ["stats", "full_process"]
 
     test = args.test
-    stats = args.stats
+    stats_arg = args.stats
 
     if action_clean:
         if process_student:
@@ -41,9 +40,9 @@ def main():
 
     if action_stats:
         if process_student:
-            run_stats.process_data("student", stats, test)
+            stats.process_data("student", stats_arg, test)
         if process_fac_staff:
-            run_stats.process_data("fac_staff", stats, test)
+            stats.process_data("fac_staff", stats_arg, test)
 
 if __name__ == "__main__":
     print("Starting run_stats.py\n")
