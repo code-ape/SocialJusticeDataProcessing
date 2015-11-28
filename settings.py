@@ -47,6 +47,19 @@ fac_staff_clean_file_name = "fac_staff_clean_data.json"
 student_clean_path = os.path.join(student_clean_dir, student_clean_file_name)
 fac_staff_clean_path = os.path.join(fac_staff_clean_dir, fac_staff_clean_file_name)
 
+# result files
+student_stats_file_name = "student_stats_data.pdf"
+fac_staff_stats_file_name = "fac_staff_stats_data.pdf"
+# combine paths
+student_stats_path = os.path.join(student_stats_dir, student_stats_file_name)
+fac_staff_stats_path = os.path.join(fac_staff_stats_dir, fac_staff_stats_file_name)
+
+# result highlight files
+student_stats_highlight_file_name = "student_stats_highlight_data.pdf"
+fac_staff_stats_hightlight_file_name = "fac_staff_stats_highlight_data.pdf"
+# combine paths
+student_stats_highlight_path = os.path.join(student_stats_dir, student_stats_highlight_file_name)
+fac_staff_stats_highlight_path = os.path.join(fac_staff_stats_dir, fac_staff_stats_hightlight_file_name)
 
 # verify everything exists
 files_to_verify = [student_raw_path, fac_staff_raw_path]

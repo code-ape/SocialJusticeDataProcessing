@@ -1,4 +1,5 @@
 import itertools
+import copy
 
 def print_first(number,thing):
     if not hasattr(thing, '__iter__'):
@@ -88,7 +89,7 @@ def get_responses_to_numbers(question_nums, data):
     return responses
 
 
-def turn_responses_into_values(*args):
+def extract_vals_from_responses(*args):
     assert(len(args) > 0)
     return_val = []
     for response_list in args:
@@ -97,6 +98,59 @@ def turn_responses_into_values(*args):
             clean_response_list.append(response[2])
         return_val.append(clean_response_list)
     return return_val
+
+def get_indexes_of_invalid_repsonse_types(allowed_types, *response_lists):
+    return_val = []
+    for response_list in response_lists:
+        invalid_indexes = []
+        count = 0
+        for response in response_list:
+            if type(response) not in allowed_types:
+                invalid_indexes.append(count)
+            count+=1
+        return_val.append(invalid_indexes)
+    return return_val
+
+
+def merge_invalid_indexes(*invalid_indexes_lists):
+    maxes = []
+    for invalid_indexes_list in invalid_indexes_lists:
+        if len(invalid_indexes_list) > 0:
+            maxes.append(max(invalid_indexes_list))
+    if len(maxes) > 0:
+        maximum = max(maxes)
+    else:
+        return []
+
+    final_list = []
+    for i in xrange(maximum+1):
+        found = False
+        for l in invalid_indexes_lists:
+            if i in l and not found:
+                final_list.append(i)
+                found = True
+    return final_list
+
+
+def remove_entries_at_indexes(indexes, *lists):
+    return_val = []
+    for l in lists:
+        new_l = copy.copy(l)
+        count = 0
+        for index in indexes:
+            try:
+                del new_l[index - count]
+            except IndexError as e:
+                print("Index error, trying to access index {} for list len {}".format(
+                    index-count, len(new_l)
+                ))
+                print(new_l)
+                print(indexes)
+                raise e
+            count+=1
+        return_val.append(new_l)
+    return return_val
+
 
 
 def get_responses_to_number(question_num, data):
